@@ -19,7 +19,8 @@ let initialBlock = {};
 initialBlock.transactions = [];
 initialBlock.meta={
   miner:"",
-  minerReward:"0"
+  minerReward:"0",
+  hash:"0"
 };
 initialBlock.transactions.push({
   from:"",
@@ -61,6 +62,7 @@ io.on('connection', function(socket){
     });
 
     updateClientValues();
+    updatePendingTransactions();
 
 
     io.sockets.emit('listClients', listClients);
@@ -114,6 +116,10 @@ function updateClientValues(){
     }
   }
 
+}
+
+function updatePendingTransactions(){
+  pendingTransactions = pendingTransactions.filter(i=>listClients.includes(i.to) && listClients.includes(i.from));
 }
 
 

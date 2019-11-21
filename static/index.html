@@ -31,8 +31,9 @@
 
       <button @click="addTransaction()">Add Transaction</button>
     </div>
-    <div>Mine: <input type="text" v-model="nonce"/></div>
+    <div>Nonce Guess: <input type="text" v-model="nonce"/><button @click="updateNonce">Update</button>{{nonceValidity}}</div>
     <div>Hash:{{hash()}}</div>
+    <div>Hash Requirement:{{nonceRequirement}}</div>
     <div><button @click="submitNonce">Submit Nonce</button>
     </div>
   </div>
@@ -57,6 +58,8 @@
           returnAmount: "0",
           clientValues: [],
           nonce: " ",
+          nonceValidity:"Invalid",
+          nonceRequirement:100000000
 
         },
         mounted() {
@@ -80,6 +83,7 @@
           this.socket.on('pendingTransactions', function (msg) {
             app.pendingTransactions = msg;
           })
+          this.updateNonce();
         },
         methods: {
           addTransaction() {
@@ -91,6 +95,15 @@
           },
           submitNonce() {
 
+          },
+          updateNonce(){
+            this.nonce = Math.random();
+            if(this.hash() < this.nonceRequirement){
+              this.nonceValidity = "!!Valid"
+            }
+            else{
+              this.nonceValidity = "Invalid"
+            }
           }
 
 
